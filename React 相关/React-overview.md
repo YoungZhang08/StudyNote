@@ -96,7 +96,7 @@
   }
   ```
 
-  > 以 `element` 作为起点，克隆并返回一个新的 `React` 元素（`React Element`）。生成的元素将会拥有原始元素 `props` 与新 `props` 的浅合并。新的子级会替换现有的子级。来自原始元素的 `key` 和 `ref` 将会保留。
+  > 以 `element` 作为起点，克隆并返回一个新的 `React` 元素（`React Element`）。生成的元素将会拥有原始元素 `props` 与新 `props` 的浅合并。新的子级会替换现有的子级。来自原始元素的 `key` 和 `ref` 将会保留。
 
 ### 4. React.isValidElement()
   ```
