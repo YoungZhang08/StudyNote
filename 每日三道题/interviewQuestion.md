@@ -73,6 +73,30 @@ text-align-last: justify;
 ```
 
 ### [js] js 中 attribute 和 property 的区别
-- attribute 是属于 property 的一个子集，它保存了 html 标签上定义的属性。它的值只能够是字符串，并且会始终保持 html 代码中的初始值
 - property 是 DOM 中的属性，是 JavaScript 里的对象，在其生命周期中是可变的
-- DOM 节点在初始化的时候会将 html 规范中定义的 attribute 赋值到 property 上, 而自定义的 attribute 并不属于这个氛围内, 自然生成的 DOM 节点就没有这个 property
+- DOM 节点在初始化的时候会将 html 规范中定义的 attribute 赋值到 property 上, 而自定义的 attribute 并不属于这个范围内, 生成的 DOM 节点就没有这个 property
+- attribute 是属于 property 的一个子集，它保存了 html 标签上定义的属性。它的值只能够是字符串，并且会始终保持 html 代码中的初始值
+
+## 2019/09/23
+
+### [html] 怎么检测浏览器是否支持HTML5特性？
+- 在浏览器中使用 h5 标签。
+```
+
+```
+### [css]  判断第一行和第二行的颜色分别是什么？并解释为什么？[代码]
+```
+<style>
+.red {color:red;}
+.green {color:green;}
+</style>
+
+<div class="red green">第一行：颜色是什么？</div>
+<div class="green red">第二行：颜色是什么？</div>
+
+```
+- 对于相同类型选择器指定的样式，在样式表文件中，越靠后的优先级越高。
+- 注意：这里是样式表文件中越靠后的优先级越高，而不是在元素 class 出现的顺序。
+
+### [js] 有些 js 库习惯在代码开头处添加分号有什么作用呢？除了分号还可以换成别的吗？
+- js 文件结束处是没有分号的。若几个 js 连在一起时，2个 js 连接处会发生语法上的混淆。开头加 ; 用于分隔，可以避免多文件压缩在一起时引起的错误。分号和分号放在一起也没问题，相当于 “空语句”。
