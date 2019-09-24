@@ -100,3 +100,137 @@ text-align-last: justify;
 
 ### [js] 有些 js 库习惯在代码开头处添加分号有什么作用呢？除了分号还可以换成别的吗？
 - js 文件结束处是没有分号的。若几个 js 连在一起时，2个 js 连接处会发生语法上的混淆。开头加 ; 用于分隔，可以避免多文件压缩在一起时引起的错误。分号和分号放在一起也没问题，相当于 “空语句”。
+
+## 2019/09/24
+
+### [html] HTML5 如何调用摄像头
+- window.navigator.getUserMedia()（这个已废弃，仅为了向后兼容而存在，已更名为MediaDevices.getUserMedia()）
+```
+navigator.getUserMedia( constraints, successCallback, errorCallback );
+// MediaStreamConstaints 对象指定了请求使用媒体的类型，还有每个类型的所需要的参数。
+// 当调用成功后，successCallback 中指定的函数就被调用，包含了媒体流的MediaStream对象作为它的参数，你可以把媒体流对象赋值给合适的元素，然后使用它。
+// 当调用失败，errorCallback 中指定的函数就会被调用。
+// eg:
+navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
+if (navigator.getUserMedia) {
+  navigator.getUserMedia(
+    { audio: true, video: { width: 1280, height: 720 } }, 
+    (stream) => {
+      var video = document.querySelector('video');
+      video.src = window.URL.createObjectURL(stream);
+      video.onloadedmetadata = (e) => { // 在视频的元数据加载后执行 JavaScript
+        video.play();
+      };
+    },
+    (err) => {
+      console.log("The following error occurred: " + err.name);
+    }
+  );
+} else {
+  console.log("getUserMedia not supported");
+}
+```
+- navigator.mediaDevices.getUserMedia()
+> MediaDevices.getUserMedia() 会提示用户给予使用媒体输入的许可，媒体输入会产生一个MediaStream，里面包含了请求的媒体类型的轨道。此流可以包含一个视频轨道（来自硬件或者虚拟视频源，比如相机、视频采集设备和屏幕共享服务等等）、一个音频轨道（同样来自硬件或虚拟音频源，比如麦克风、A/D转换器等等），也可能是其它轨道类型。
+
+> 它返回一个 Promise 对象，成功后会 resolve 回调一个 MediaStream 对象。若用户拒绝了使用权限，或者需要的媒体源不可用，promise 会 reject，回调一个  PermissionDeniedError 或者 NotFoundError 。
+```
+/** 
+constraints 参数是一个包含了 video 和 audio 两个成员的 MediaStreamConstraints 对象，用于说明请求的媒体类型。
+必须至少一个类型或者两个同时可以被指定。
+如果浏览器无法找到指定的媒体类型或者无法满足相对应的参数要求，那么返回的 Promise 对象就会处于 rejected［失败］状态，NotFoundError 作为 rejected［失败］回调的参数。
+*/
+
+// 想要获取一个最接近 1280x720 的相机分辨率
+var constraints = { audio: true, video: { width: 1280, height: 720 } }; 
+
+navigator.mediaDevices.getUserMedia(constraints)
+.then((mediaStream) => {
+  var video = document.querySelector('video');
+  video.srcObject = mediaStream;
+  video.onloadedmetadata = (e) => {
+    video.play();
+  };
+})
+.catch((err) => { 
+  console.log(err.name + ": " + err.message); 
+}); // 总是在最后检查错误
+```
+
+### [css]  CSS3 有哪些新增的特性
+#### 边框（border）
+- border-radius 圆角  如果你在 border-radius 属性中指定
+
+1. 四个值： 第一个值为左上角，第二个值为右上角，第三个值为右下角，第四个值为左下角。
+2. 三个值： 第一个值为左上角, 第二个值为右上角和左下角，第三个值为右下角
+3. 两个值： 第一个值为左上角与右下角，第二个值为右上角与左下角
+4. 一个值： 四个圆角值相同
+- box-shadow 盒阴影
+- border-image 边框图像
+
+#### 背景
+- background-position 背景图位置
+- background-size 背景图大小
+- background-origin 定位(content-box, padding-box 和 border-box)区域内可以放置背景图像
+- background-clip 背景剪裁属性是从指定位置开始绘制
+
+#### 渐变
+- linear-gradient 线性渐变（向下/向上/向左/向右/对角方向）
+- radial-gradient 径向渐变（由它们的中心定义）
+
+#### 文本效果
+- text-shadow 文本阴影
+- text-overflow 如何显示溢出内容
+- word-wrap 自动换行（break-word/no-wrap）
+- word-break 单词拆分换行（keep-all/break-all）
+- text-wrap 文本换行
+- text-outline 文本轮廓
+- text-justify 规定当 text-align 设置为 "justify" 时所使用的对齐方法
+
+#### 字体
+- @font-face
+
+#### 2D 转换
+- 2D 转换属性
+  - transform
+  - trnasform-origin 更改转换元素的位置
+- 2D 转换方法
+  - translate() 平移
+  - rotate() 旋转
+  - scale() 缩放
+  - skew() 倾斜
+  - matrix() matrix 方法有六个参数，包含旋转，缩放，移动（平移）和倾斜功能
+
+#### 3D 转换
+- 3D 转换属性
+  - transform
+  - trnasform-origin 更改转换元素的位置
+  - transform-style
+- 3D 转换方法
+  - translate3d(x, y, z)
+  - rotate3d(x, y, z)
+  - scale3d(x, y, z)
+
+#### 过渡
+- transtion
+
+#### 动画
+- animation
+- @keyframes 规则
+
+#### 媒介查询
+- @media
+
+### [js] 写一个方法去掉字符串中的空格
+```
+(str) => {
+  return str.replace(/\s/g, '');
+}
+
+(str) => {
+  return str.split(' ').join('');
+}
+```
